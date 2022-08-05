@@ -112,6 +112,7 @@ export const bind = <ID extends string, S extends StateTree, G, A>(
       // Receive real-time updates for a single document.
       const unsub = onSnapshot(
         ref,
+        { includeMetadataChanges: true },
         (snapshot) => {
           debug(
             "listen:",
@@ -148,6 +149,7 @@ export const bind = <ID extends string, S extends StateTree, G, A>(
       // Receive real-time updates for multiple documents.
       const unsub = onSnapshot(
         ref,
+        { includeMetadataChanges: true },
         (querySnapshot) => {
           querySnapshot.docChanges().forEach((change) => {
             debug(
