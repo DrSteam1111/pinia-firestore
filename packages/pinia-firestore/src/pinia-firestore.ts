@@ -10,7 +10,7 @@ import {
   CollectionReference,
   Query,
 } from "firebase/firestore";
-import { StateTree, StoreWithState } from "pinia";
+import { StateTree, _StoreWithState } from "pinia";
 
 //////////////////
 // define firestore type
@@ -77,23 +77,23 @@ function remove(id: string, name: string) {
 //////////////////
 
 export type DocumentProperties = {
-  readonly __id: string;
-  readonly __path: string;
-  readonly __metadata: SnapshotMetadata;
+  readonly id: string;
+  readonly path: string;
+  readonly metadata: SnapshotMetadata;
 };
 
 function makeDocumentData(
   snapshot: QueryDocumentSnapshot | DocumentSnapshot
 ): DocumentData {
   let doc = snapshot.data() || {};
-  doc = Object.defineProperty(doc, "__id", { value: snapshot.id });
-  doc = Object.defineProperty(doc, "__path", { value: snapshot.ref.path });
-  doc = Object.defineProperty(doc, "__metadata", { value: snapshot.metadata });
+  doc.id = snapshot.id
+  doc.path = snapshot.ref.path 
+  doc.metadata = snapshot.metadata
   return doc;
 }
 
 export const bind = <ID extends string, S extends StateTree, G, A>(
-  piniaInstance: StoreWithState<ID, S, G, A>,
+  piniaInstance: _StoreWithState<ID, S, G, A>,
   field: keyof S,
   ref: FirestoreReference
 ): Promise<void> => {
@@ -196,7 +196,7 @@ type UnbindOptions = {
 };
 
 export const unbind = <ID extends string, S extends StateTree, G, A>(
-  piniaInstance: StoreWithState<ID, S, G, A>,
+  piniaInstance: _StoreWithState<ID, S, G, A>,
   field: keyof S,
   options: UnbindOptions = { reset: true }
 ): void => {
